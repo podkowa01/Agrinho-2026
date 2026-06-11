@@ -1,4 +1,4 @@
-/* Reset estrutural para evitar bugs de tamanho e margens em navegadores diferentes */
+/* RESET DE NAVEGADOR: Garante que o corpo e todos os elementos ocupem o tamanho correto */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -6,210 +6,203 @@
 }
 
 body {
-    background-color: #f1f8e9; /* Verde bem claro, tom sustentável */
+    background-color: #e8f5e9; /* Tom de verde claro de fundo */
     color: #1b5e20;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    display: block;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
-    line-height: 1.6;
 }
 
+/* CONTAINER PRINCIPAL: Centralizado na tela com largura máxima controlada */
 .game-container {
     background: #ffffff;
-    max-width: 850px;
-    margin: 20px auto;
+    width: 100%;
+    max-width: 800px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 30px;
     border-top: 10px solid #2e7d32;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
-/* Cabeçalho e Painel de Status */
+/* CABEÇALHO */
 header {
     text-align: center;
-    margin-bottom: 30px;
 }
 
 header h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     color: #1b5e20;
-    margin-bottom: 8px;
-    font-weight: 800;
+    margin-bottom: 5px;
 }
 
 header p {
     color: #555;
-    font-size: 1rem;
-    margin-bottom: 20px;
+    font-size: 0.95rem;
 }
 
+/* BARRA DE STATUS: Organizada em linha */
 .status-bar {
-    display: table;
-    width: 100%;
-    background: #e8f5e9;
-    border: 2px solid #a5d6a7;
+    display: flex;
+    justify-content: space-around;
+    background: #f1f8e9;
+    border: 2px solid #c8e6c9;
     border-radius: 12px;
     padding: 15px;
-    text-align: center;
+    margin-top: 15px;
+    gap: 10px;
 }
 
 .status-item {
-    display: inline-block;
-    width: 33%;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #2e7d32;
+    text-align: center;
 }
 
-/* Área Visual da Lavoura */
+/* ÁREA DA LAVOURA */
 .farm-area {
     text-align: center;
-    margin-bottom: 35px;
 }
 
 .farm-area h2, .shop-area h2 {
-    font-size: 1.5rem;
-    color: #1b5e20;
+    font-size: 1.4rem;
     margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .field {
-    min-height: 180px;
+    min-height: 160px;
     border-radius: 12px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     color: #ffffff;
     text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-    transition: background-color 0.4s ease, border 0.4s ease;
-    margin-bottom: 20px;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+    margin-bottom: 15px;
     border: 3px solid transparent;
 }
 
-/* Estados de Cor do Solo baseado nos Problemas */
-.healthy { 
-    background-color: #4caf50; 
-    border-color: #2e7d32;
-}
-.pest-active { 
-    background-color: #a1887f; /* Tom amarronzado/lagarta */
-    border-color: #5d4037;
-} 
-.drought-active { 
-    background-color: #ffb74d; /* Tom terra seca/alaranjado */
-    border-color: #f57c00;
-} 
-.erosion-active { 
-    background-color: #8d6e63; /* Solo degradado exposto */
-    border-color: #4e342e;
-} 
-.nutrients-active { 
-    background-color: #90a4ae; /* Tom acinzentado/infértil */
-    border-color: #37474f;
-}
+/* ESTADOS DE COR DA TERRA */
+.healthy { background-color: #4caf50; border-color: #2e7d32; }
+.pest-active { background-color: #a1887f; border-color: #5d4037; } 
+.drought-active { background-color: #ffb74d; border-color: #f57c00; } 
+.erosion-active { background-color: #8d6e63; border-color: #4e342e; } 
+.nutrients-active { background-color: #90a4ae; border-color: #37474f; }
 
 #crop-status-text {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    margin-top: 15px;
 }
 
 .alert {
     background-color: #d32f2f;
     color: #ffffff;
-    padding: 10px 15px;
+    padding: 8px 12px;
     border-radius: 6px;
-    margin-top: 15px;
-    font-size: 0.95rem;
+    margin-top: 12px;
+    font-size: 0.9rem;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .hidden { 
     display: none !important; 
 }
 
-/* Botão Principal de Ação */
+/* BOTÃO DE COLHEITA */
 .btn-main {
     background-color: #2e7d32;
     color: #ffffff;
     font-size: 1.2rem;
     font-weight: bold;
-    padding: 14px 40px;
+    padding: 12px 35px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
     transition: background-color 0.2s, transform 0.1s;
 }
 
-.btn-main:hover {
-    background-color: #1b5e20;
-}
+.btn-main:hover { background-color: #1b5e20; }
+.btn-main:active { transform: scale(0.98); }
 
-.btn-main:active {
-    transform: scale(0.98);
-}
-
-/* Loja de Soluções Sustentáveis */
+/* LOJA EM GRID: Divide em 2 colunas perfeitas automaticamente */
 .upgrades-grid {
-    display: table;
-    width: 100%;
-    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .card {
-    display: inline-block;
-    width: 48%;
     background: #f9f9f9;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
-    padding: 20px;
-    margin: 1% 1%;
+    padding: 15px;
     text-align: center;
-    vertical-align: top;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .card h3 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: #333333;
-    margin-bottom: 6px;
 }
 
 .card p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #666666;
-    margin-bottom: 12px;
 }
 
 .card button {
     width: 100%;
     padding: 10px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: bold;
     color: #ffffff;
-    background-color: #b0bec5; /* Botão desativado por padrão */
+    background-color: #b0bec5;
     border: none;
     border-radius: 6px;
     cursor: not-allowed;
     transition: background-color 0.3s;
 }
 
-/* Estilo ativo injetado pelo JavaScript */
+/* Estado quando o botão pode ser clicado */
 .card button.ready {
-    background-color: #ff9800; /* Laranja de atenção e ação */
+    background-color: #ff9800;
     cursor: pointer;
 }
-
-.card button.ready:hover {
-    background-color: #e65100;
-}
+.card button.ready:hover { background-color: #e65100; }
 
 footer {
     text-align: center;
-    margin-top: 40px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #777777;
     border-top: 1px solid #e0e0e0;
-    padding-top: 20px;
+    padding-top: 15px;
+}
+
+/* RESPONSIVIDADE: Ajustes para telas pequenas (Celular) */
+@media (max-width: 600px) {
+    .status-bar {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .game-container {
+        padding: 15px;
+    }
+    header h1 {
+        font-size: 1.6rem;
+    }
 }

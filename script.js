@@ -1,42 +1,42 @@
-// Variáveis Globais de Controle da Fazenda
+// Configuração do Estado do Jogo
 var money = 100;
 var score = 0;
 var health = 100;
 var currentProblem = null;
 
-// Configuração técnica dos problemas rurais enfrentados no Agrinho
+// Lista de problemas do Agrinho
 var listofProblems = {
     "pest": {
         name: "Ataque de Pragas (Lagarta-do-Cartucho)",
-        alertText: "⚠️ Lagartas devorando as folhas! A qualidade da colheita despencou.",
+        alertText: "⚠️ Lagartas devorando as folhas! A qualidade da colheita caiu.",
         className: "pest-active",
         damage: 1.5,
-        loss: 3
+        loss: 4
     },
     "drought": {
         name: "Estiagem Severa (Falta de Chuva)",
-        alertText: "⚠️ Solo seco! Sem água, os nutrientes não chegam à planta.",
+        alertText: "⚠️ Solo seco! Sem água, as plantas estão murchando.",
         className: "drought-active",
         damage: 2.0,
-        loss: 4
+        loss: 5
     },
     "erosion": {
-        name: "Erosão e Degradação Hidrica",
-        alertText: "⚠️ Enxurrada lavando o solo! Falta palhada de proteção na terra.",
+        name: "Erosão e Degradação do Solo",
+        alertText: "⚠️ Chuva forte lavando a terra por falta de palhada protetora!",
         className: "erosion-active",
         damage: 1.2,
-        loss: 2
+        loss: 3
     },
     "nutrients": {
-        name: "Exaustão de Nutrientes do Solo",
-        alertText: "⚠️ Terra infértil! Planta amarelada com severa falta de nitrogênio.",
+        name: "Exaustão de Nutrientes",
+        alertText: "⚠️ Terra infértil! Planta amarelada com falta de nitrogênio.",
         className: "nutrients-active",
         damage: 1.0,
         loss: 2
     }
 };
 
-// Captura segura dos elementos HTML
+// Seleção de Elementos da Interface
 var moneyEl = document.getElementById("money");
 var scoreEl = document.getElementById("score");
 var healthEl = document.getElementById("health");
@@ -45,17 +45,17 @@ var statusTextEl = document.getElementById("crop-status-text");
 var alertEl = document.getElementById("problem-alert");
 var btnHarvest = document.getElementById("btn-harvest");
 
-// Função Executada ao Clicar em "Colher"
+// Clique no botão colher
 if (btnHarvest) {
     btnHarvest.onclick = function() {
         var baseGainMoney = 15;
         var baseGainSacas = 1;
 
         if (currentProblem) {
-            // Penalidade financeira se o produtor colher com a lavoura doente
-            baseGainMoney = Math.max(3, baseGainMoney - listofProblems[currentProblem].loss);
-            baseGainSacas = 0; 
-            alert("Atenção: Trate o problema da sua lavoura para conseguir colher sacas cheias de alta qualidade!");
+            // Penalidade financeira se colher com praga ou seca ativa
+            baseGainMoney = Math.max(2, baseGainMoney - listofProblems[currentProblem].loss);
+            baseGainSacas = 0;
+            alert("Manejo Incorreto! Trate o problema da lavoura na loja abaixo para voltar a colher sacas cheias.");
         } else {
             score += baseGainSacas;
         }
@@ -65,39 +65,37 @@ if (btnHarvest) {
     };
 }
 
-// Sorteador de crises ecológicas e biológicas na lavoura (Roda a cada 7 segundos)
+// Sorteador de crises (Roda a cada 6 segundos)
 setInterval(function() {
     if (!currentProblem) {
-        var chance = Math.random();
-        if (chance > 0.4) {
+        if (Math.random() > 0.3) {
             var keys = ["pest", "drought", "erosion", "nutrients"];
             var randomKey = keys[Math.floor(Math.random() * keys.length)];
             currentProblem = randomKey;
-            applyProblemToField(randomKey);
+            applyProblem(randomKey);
         }
     }
-}, 7000);
+}, 6000);
 
-// Ciclo contínuo de dano temporal e recuperação da saúde da lavoura
+// Ciclo de dano no solo (Roda a cada 1 segundo)
 setInterval(function() {
     if (currentProblem) {
         health -= listofProblems[currentProblem].damage;
         if (health <= 0) {
             health = 0;
-            alert("Crise Máxima! A saúde da terra zerou. Aplique o manejo tecnológico adequado imediatamente!");
+            alert("A saúde da terra zerou! Use as soluções tecnológicas para recuperar o solo.");
         }
         updateGameUI();
     } else {
-        // Regeneração gradual biológica se o manejo estiver correto
         if (health < 100) {
-            health = Math.min(100, health + 0.5);
+            health = Math.min(100, health + 0.5); // Recuperação lenta natural
             updateGameUI();
         }
     }
 }, 1000);
 
-// Altera o cenário da lavoura para o estado problemático sorteado
-function applyProblemToField(id) {
+// Aplica a crise visualmente
+function applyProblem(id) {
     var prob = listofProblems[id];
     if (fieldEl && statusTextEl && alertEl) {
         fieldEl.className = "field " + prob.className;
@@ -108,43 +106,40 @@ function applyProblemToField(id) {
     updateGameUI();
 }
 
-// Trata o problema aplicando a tecnologia de manejo correta
+// Resolve o problema clicando no botão da loja correspondente
 function resolveProblem(id, cost) {
     if (currentProblem === id) {
         if (money >= cost) {
             money -= cost;
             currentProblem = null;
             
-            // Restaura o ambiente visual saudável
             if (fieldEl && statusTextEl && alertEl) {
                 fieldEl.className = "field healthy";
                 statusTextEl.innerText = "Sua lavoura está limpa, protegida e crescendo forte!";
                 alertEl.classList.add("hidden");
             }
             
-            // Recompensa em saúde do solo pelo tratamento correto
-            health = Math.min(100, health + 25);
+            health = Math.min(100, health + 25); // Bônus por aplicar manejo sustentável
             updateGameUI();
         } else {
-            alert("Saldo insuficiente! Continue colhendo o que puder para juntar moedas.");
+            alert("Você não tem moedas suficientes para essa tecnologia agrícola!");
         }
     }
 }
 
-// Sincroniza todas as variáveis lógicas com a interface do usuário (UI)
+// Atualiza os dados na tela
 function updateGameUI() {
     if (moneyEl) moneyEl.innerText = Math.floor(money);
     if (scoreEl) scoreEl.innerText = score;
     if (healthEl) healthEl.innerText = Math.floor(health);
 
-    // Valida os botões da loja
+    // Validação de botões da loja
     manageShopButton("btn-pest", "pest", 30);
     manageShopButton("btn-drought", "drought", 50);
     manageShopButton("btn-erosion", "erosion", 40);
     manageShopButton("btn-nutrients", "nutrients", 25);
 }
 
-// Ativa ou desativa os botões baseado na crise atual e no dinheiro do jogador
 function manageShopButton(btnId, problemId, cost) {
     var btn = document.getElementById(btnId);
     if (btn) {
@@ -158,5 +153,5 @@ function manageShopButton(btnId, problemId, cost) {
     }
 }
 
-// Inicializa a interface no carregamento da página
+// Inicialização inicial
 updateGameUI();

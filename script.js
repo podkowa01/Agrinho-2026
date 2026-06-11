@@ -2,49 +2,59 @@ let money = 100;
 let food = 50;
 let nature = 100;
 
-function update(){
-document.getElementById("money").innerText = money;
-document.getElementById("food").innerText = food;
-document.getElementById("nature").innerText = nature;
+function updateScreen() {
 
-if(nature <= 0){
-document.getElementById("message").innerText =
-"❌ Sua fazenda destruiu o meio ambiente!";
-}
+    document.getElementById("money").textContent = money;
+    document.getElementById("food").textContent = food;
+    document.getElementById("nature").textContent = nature;
 
-if(food >= 200){
-document.getElementById("message").innerText =
-"🏆 Parabéns! Você venceu com uma fazenda sustentável!";
-}
+    const message = document.getElementById("message");
+
+    if(nature <= 0){
+        message.textContent = "❌ Você destruiu o meio ambiente!";
+        disableButtons();
+    }
+
+    if(food >= 200){
+        message.textContent = "🏆 Parabéns! Você venceu!";
+        disableButtons();
+    }
 }
 
 function organic(){
-food += 20;
-money += 10;
-nature += 5;
-
-update();
+    money += 10;
+    food += 20;
+    nature += 5;
+    updateScreen();
 }
 
 function fertilizer(){
-food += 40;
-money += 20;
-nature -= 25;
-
-update();
+    money += 20;
+    food += 40;
+    nature -= 25;
+    updateScreen();
 }
 
 function trees(){
-nature += 20;
-money -= 10;
-
-update();
+    money -= 10;
+    nature += 20;
+    updateScreen();
 }
 
 function harvest(){
-food += 30;
-money += 30;
-nature -= 10;
-
-update();
+    money += 30;
+    food += 30;
+    nature -= 10;
+    updateScreen();
 }
+
+function disableButtons(){
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+    });
+}
+
+updateScreen();

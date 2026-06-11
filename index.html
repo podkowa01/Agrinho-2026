@@ -1,38 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agrinho 2026 - Fazenda Sustentável</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrinho 2026 - Fazenda Sustentável</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
 
-<h1>🌱 Fazenda Sustentável</h1>
+    <h1>🌱 Fazenda Sustentável</h1>
 
-<div class="painel">
+    <div class="status">
+        <div class="card">
+            <h3>💰 Dinheiro</h3>
+            <p id="money">100</p>
+        </div>
 
-<p>💰 Dinheiro: <span id="money">100</span></p>
+        <div class="card">
+            <h3>🌾 Produção</h3>
+            <p id="food">50</p>
+        </div>
 
-<p>🌾 Produção: <span id="food">50</span></p>
+        <div class="card">
+            <h3>🌍 Meio Ambiente</h3>
+            <p id="nature">100</p>
+        </div>
+    </div>
 
-<p>🌍 Meio Ambiente: <span id="nature">100</span></p>
+    <h2>Escolha uma ação:</h2>
 
-</div>
+    <div class="buttons">
+        <button onclick="organic()">🌿 Agricultura Orgânica</button>
+        <button onclick="fertilizer()">🧪 Fertilizante Químico</button>
+        <button onclick="trees()">🌳 Plantar Árvores</button>
+        <button onclick="harvest()">🚜 Grande Colheita</button>
+    </div>
 
-<h2>Escolha uma ação:</h2>
-
-<button onclick="organic()">🌿 Agricultura Orgânica</button>
-
-<button onclick="fertilizer()">🧪 Fertilizante Químico</button>
-
-<button onclick="trees()">🌳 Plantar Árvores</button>
-
-<button onclick="harvest()">🚜 Grande Colheita</button>
-
-<h2 id="message"></h2>
+    <h2 id="message"></h2>
 
 </div>
 

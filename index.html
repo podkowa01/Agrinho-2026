@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Trator do Agrinho 2026</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agrinho 2026 - Fazenda Sustentável</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🚜 Trator do Agrinho 2026</h1>
-<p>Pegue os alimentos e desvie das pedras!</p>
+<div class="container">
 
-<div id="game">
-    <div id="tractor">🚜</div>
+<h1>🌱 Fazenda Sustentável</h1>
+
+<div class="painel">
+
+<p>💰 Dinheiro: <span id="money">100</span></p>
+
+<p>🌾 Produção: <span id="food">50</span></p>
+
+<p>🌍 Meio Ambiente: <span id="nature">100</span></p>
+
 </div>
 
-<h2>Pontos: <span id="score">0</span></h2>
+<h2>Escolha uma ação:</h2>
+
+<button onclick="organic()">🌿 Agricultura Orgânica</button>
+
+<button onclick="fertilizer()">🧪 Fertilizante Químico</button>
+
+<button onclick="trees()">🌳 Plantar Árvores</button>
+
+<button onclick="harvest()">🚜 Grande Colheita</button>
+
+<h2 id="message"></h2>
+
+</div>
 
 <script src="script.js"></script>
+
 </body>
 </html>

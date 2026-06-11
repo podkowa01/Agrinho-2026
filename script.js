@@ -1,76 +1,50 @@
-const tractor = document.getElementById("tractor");
-const game = document.getElementById("game");
-const scoreText = document.getElementById("score");
+let money = 100;
+let food = 50;
+let nature = 100;
 
-let score = 0;
-let tractorX = 220;
+function update(){
+document.getElementById("money").innerText = money;
+document.getElementById("food").innerText = food;
+document.getElementById("nature").innerText = nature;
 
-document.addEventListener("keydown", (e) => {
-
-    if(e.key === "ArrowLeft"){
-        tractorX -= 25;
-    }
-
-    if(e.key === "ArrowRight"){
-        tractorX += 25;
-    }
-
-    if(tractorX < 0) tractorX = 0;
-    if(tractorX > 450) tractorX = 450;
-
-    tractor.style.left = tractorX + "px";
-});
-
-function createItem(){
-
-    const item = document.createElement("div");
-    item.classList.add("item");
-
-    const good = Math.random() > 0.3;
-
-    item.innerHTML = good ? "🌽" : "🪨";
-
-    item.style.left = Math.random()*450 + "px";
-    item.style.top = "0px";
-
-    game.appendChild(item);
-
-    let pos = 0;
-
-    const fall = setInterval(() => {
-
-        pos += 5;
-        item.style.top = pos + "px";
-
-        const itemX = item.offsetLeft;
-        const itemY = pos;
-
-        const tractorY = 520;
-
-        if(
-            itemY > tractorY &&
-            itemX > tractorX - 30 &&
-            itemX < tractorX + 50
-        ){
-
-            if(good){
-                score++;
-                scoreText.textContent = score;
-            }else{
-                alert("Fim de jogo! Pontuação: " + score);
-                location.reload();
-            }
-
-            item.remove();
-            clearInterval(fall);
-        }
-
-        if(pos > 600){
-            item.remove();
-            clearInterval(fall);
-        }
-
-    }, 30);
+if(nature <= 0){
+document.getElementById("message").innerText =
+"❌ Sua fazenda destruiu o meio ambiente!";
 }
 
-setInterval(createItem, 1000);
+if(food >= 200){
+document.getElementById("message").innerText =
+"🏆 Parabéns! Você venceu com uma fazenda sustentável!";
+}
+}
+
+function organic(){
+food += 20;
+money += 10;
+nature += 5;
+
+update();
+}
+
+function fertilizer(){
+food += 40;
+money += 20;
+nature -= 25;
+
+update();
+}
+
+function trees(){
+nature += 20;
+money -= 10;
+
+update();
+}
+
+function harvest(){
+food += 30;
+money += 30;
+nature -= 10;
+
+update();
+}

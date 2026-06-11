@@ -1,146 +1,162 @@
-// Variáveis de Estado do Jogo
-let money = 100;
-let score = 0;
-let health = 100;
-let currentProblem = null;
+// Variáveis Globais de Controle da Fazenda
+var money = 100;
+var score = 0;
+var health = 100;
+var currentProblem = null;
 
-// Dicionário de problemas da lavoura com impactos e textos informativos
-const problems = {
-    pest: {
-        name: "Infestação de Lagartas",
-        alertText: "⚠️ Lagartas atacando as folhas! Prejuízo na colheita e saúde caindo.",
-        class: "pest-active",
+// Configuração técnica dos problemas rurais enfrentados no Agrinho
+var listofProblems = {
+    "pest": {
+        name: "Ataque de Pragas (Lagarta-do-Cartucho)",
+        alertText: "⚠️ Lagartas devorando as folhas! A qualidade da colheita despencou.",
+        className: "pest-active",
         damage: 1.5,
-        loss: 2 // reduz ganho da colheita
-    },
-    drought: {
-        name: "Estiagem / Seca Severa",
-        alertText: "⚠️ Falta de chuva! O solo está rachando e as plantas murchando.",
-        class: "drought-active",
-        damage: 2.0,
         loss: 3
     },
-    erosion: {
-        name: "Erosão por Chuva Forte",
-        alertText: "⚠️ Enxurrada levando a camada fértil do solo por falta de cobertura!",
-        class: "erosion-active",
-        damage: 1.2,
-        loss: 1
+    "drought": {
+        name: "Estiagem Severa (Falta de Chuva)",
+        alertText: "⚠️ Solo seco! Sem água, os nutrientes não chegam à planta.",
+        className: "drought-active",
+        damage: 2.0,
+        loss: 4
     },
-    nutrients: {
-        name: "Deficiência Nutricional",
-        alertText: "⚠️ Folhas amareladas! Falta de nitrogênio e matéria orgânica no solo.",
-        class: "nutrients-active",
-        damage: 0.8,
-        loss: 1
+    "erosion": {
+        name: "Erosão e Degradação Hidrica",
+        alertText: "⚠️ Enxurrada lavando o solo! Falta palhada de proteção na terra.",
+        className: "erosion-active",
+        damage: 1.2,
+        loss: 2
+    },
+    "nutrients": {
+        name: "Exaustão de Nutrientes do Solo",
+        alertText: "⚠️ Terra infértil! Planta amarelada com severa falta de nitrogênio.",
+        className: "nutrients-active",
+        damage: 1.0,
+        loss: 2
     }
 };
 
-// Elementos do DOM
-const moneyEl = document.getElementById("money");
-const scoreEl = document.getElementById("score");
-const healthEl = document.getElementById("health");
-const fieldEl = document.getElementById("crop-field");
-const statusTextEl = document.getElementById("crop-status-text");
-const alertEl = document.getElementById("problem-alert");
-const btnHarvest = document.getElementById("btn-harvest");
+// Captura segura dos elementos HTML
+var moneyEl = document.getElementById("money");
+var scoreEl = document.getElementById("score");
+var healthEl = document.getElementById("health");
+var fieldEl = document.getElementById("crop-field");
+var statusTextEl = document.getElementById("crop-status-text");
+var alertEl = document.getElementById("problem-alert");
+var btnHarvest = document.getElementById("btn-harvest");
 
-// Evento de Colheita (Ganha moedas e sacas)
-btnHarvest.addEventListener("click", () => {
-    let baseGainMoney = 10;
-    let baseGainSacas = 1;
+// Função Executada ao Clicar em "Colher"
+if (btnHarvest) {
+    btnHarvest.onclick = function() {
+        var baseGainMoney = 15;
+        var baseGainSacas = 1;
 
-    if (currentProblem) {
-        // Se houver problema, a colheita rende menos
-        baseGainMoney = Math.max(2, baseGainMoney - problems[currentProblem].loss);
-        baseGainSacas = 0; 
-        alert("Lavoura com problemas! Resolva a crise para voltar a colher sacas cheias.");
-    } else {
-        score += baseGainSacas;
+        if (currentProblem) {
+            // Penalidade financeira se o produtor colher com a lavoura doente
+            baseGainMoney = Math.max(3, baseGainMoney - listofProblems[currentProblem].loss);
+            baseGainSacas = 0; 
+            alert("Atenção: Trate o problema da sua lavoura para conseguir colher sacas cheias de alta qualidade!");
+        } else {
+            score += baseGainSacas;
+        }
+
+        money += baseGainMoney;
+        updateGameUI();
+    };
+}
+
+// Sorteador de crises ecológicas e biológicas na lavoura (Roda a cada 7 segundos)
+setInterval(function() {
+    if (!currentProblem) {
+        var chance = Math.random();
+        if (chance > 0.4) {
+            var keys = ["pest", "drought", "erosion", "nutrients"];
+            var randomKey = keys[Math.floor(Math.random() * keys.length)];
+            currentProblem = randomKey;
+            applyProblemToField(randomKey);
+        }
     }
+}, 7000);
 
-    money += baseGainMoney;
-    updateUI();
-});
-
-// Sorteia um problema aleatório a cada 8 segundos (se não houver um ativo)
-setInterval(() => {
-    if (!currentProblem && Math.random() > 0.3) {
-        const keys = Object.keys(problems);
-        currentProblem = keys[Math.floor(Math.random() * keys.length)];
-        triggerProblem(currentProblem);
-    }
-}, 8000);
-
-// Loop de dano no solo (roda a cada 1 segundo)
-setInterval(() => {
+// Ciclo contínuo de dano temporal e recuperação da saúde da lavoura
+setInterval(function() {
     if (currentProblem) {
-        health -= problems[currentProblem].damage;
+        health -= listofProblems[currentProblem].damage;
         if (health <= 0) {
             health = 0;
-            alert("A saúde da sua lavoura chegou a zero! Faça o manejo correto para recuperar o solo.");
+            alert("Crise Máxima! A saúde da terra zerou. Aplique o manejo tecnológico adequado imediatamente!");
         }
-        updateUI();
+        updateGameUI();
     } else {
-        // Recuperação natural lenta do solo quando saudável
+        // Regeneração gradual biológica se o manejo estiver correto
         if (health < 100) {
             health = Math.min(100, health + 0.5);
-            updateUI();
+            updateGameUI();
         }
     }
 }, 1000);
 
-// Ativa o visual de problema na tela
-function triggerProblem(id) {
-    const prob = problems[id];
-    fieldEl.className = `field ${prob.class}`;
-    statusTextEl.innerText = prob.name;
-    alertEl.innerText = prob.alertText;
-    alertEl.classList.remove("hidden");
-    updateUI();
+// Altera o cenário da lavoura para o estado problemático sorteado
+function applyProblemToField(id) {
+    var prob = listofProblems[id];
+    if (fieldEl && statusTextEl && alertEl) {
+        fieldEl.className = "field " + prob.className;
+        statusTextEl.innerText = prob.name;
+        alertEl.innerText = prob.alertText;
+        alertEl.classList.remove("hidden");
+    }
+    updateGameUI();
 }
 
-// Resolve o problema clicando no botão da loja correspondente
+// Trata o problema aplicando a tecnologia de manejo correta
 function resolveProblem(id, cost) {
-    if (currentProblem === id && money >= cost) {
-        money -= cost;
-        currentProblem = null;
-        
-        // Remove alertas visuais
-        fieldEl.className = "field healthy";
-        statusTextEl.innerText = "Sua lavoura está limpa, protegida e crescendo forte!";
-        alertEl.classList.add("hidden");
-        
-        // Bônus ecológico por resolver o problema corretamente
-        health = Math.min(100, health + 20); 
-        
-        updateUI();
+    if (currentProblem === id) {
+        if (money >= cost) {
+            money -= cost;
+            currentProblem = null;
+            
+            // Restaura o ambiente visual saudável
+            if (fieldEl && statusTextEl && alertEl) {
+                fieldEl.className = "field healthy";
+                statusTextEl.innerText = "Sua lavoura está limpa, protegida e crescendo forte!";
+                alertEl.classList.add("hidden");
+            }
+            
+            // Recompensa em saúde do solo pelo tratamento correto
+            health = Math.min(100, health + 25);
+            updateGameUI();
+        } else {
+            alert("Saldo insuficiente! Continue colhendo o que puder para juntar moedas.");
+        }
     }
 }
 
-// Atualiza a interface (textos, cores dos botões se tem dinheiro ou não)
-function updateUI() {
-    moneyEl.innerText = Math.floor(money);
-    scoreEl.innerText = score;
-    healthEl.innerText = Math.floor(health);
+// Sincroniza todas as variáveis lógicas com a interface do usuário (UI)
+function updateGameUI() {
+    if (moneyEl) moneyEl.innerText = Math.floor(money);
+    if (scoreEl) scoreEl.innerText = score;
+    if (healthEl) healthEl.innerText = Math.floor(health);
 
-    // Gerencia botões da loja de acordo com o dinheiro e o problema ativo
-    checkButtonState("btn-pest", "pest", 30);
-    checkButtonState("btn-drought", "drought", 50);
-    checkButtonState("btn-erosion", "erosion", 40);
-    checkButtonState("btn-nutrients", "nutrients", 25);
+    // Valida os botões da loja
+    manageShopButton("btn-pest", "pest", 30);
+    manageShopButton("btn-drought", "drought", 50);
+    manageShopButton("btn-erosion", "erosion", 40);
+    manageShopButton("btn-nutrients", "nutrients", 25);
 }
 
-function checkButtonState(btnId, problemId, cost) {
-    const btn = document.getElementById(btnId);
-    if (currentProblem === problemId && money >= cost) {
-        btn.removeAttribute("disabled");
-        btn.classList.add("ready");
-    } else {
-        btn.setAttribute("disabled", "true");
-        btn.classList.remove("ready");
+// Ativa ou desativa os botões baseado na crise atual e no dinheiro do jogador
+function manageShopButton(btnId, problemId, cost) {
+    var btn = document.getElementById(btnId);
+    if (btn) {
+        if (currentProblem === problemId && money >= cost) {
+            btn.removeAttribute("disabled");
+            btn.classList.add("ready");
+        } else {
+            btn.setAttribute("disabled", "true");
+            btn.classList.remove("ready");
+        }
     }
 }
 
-// Inicialização técnica
-updateUI();
+// Inicializa a interface no carregamento da página
+updateGameUI();

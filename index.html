@@ -3,25 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agrinho 2026 - Defensor da Lavoura</title>
+    <title>Agrinho 2026: Guardião da Lavoura</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="game-container">
+        <header>
+            <h1>Agrinho 2026: Desafios na Lavoura</h1>
+            <p>Monitore sua plantação, resolva os problemas e produza de forma sustentável!</p>
+            <div class="status-bar">
+                <div class="status-item">Moedas: <span id="money">100</span> 🪙</div>
+                <div class="status-item">Sacas Colhidas: <span id="score">0</span> 🌾</div>
+                <div class="status-item">Saúde da Terra: <span id="health">100</span>%</div>
+            </div>
+        </header>
 
-    <div class="container">
-        <h1>🌱 Defensor da Lavoura - Agrinho 2026</h1>
+        <main>
+            <section class="farm-area">
+                <h2>Sua Plantação</h2>
+                <div id="crop-field" class="field healthy">
+                    <div id="crop-status-text">Sua lavoura está crescendo forte!</div>
+                    <div id="problem-alert" class="alert hidden"></div>
+                </div>
+                <button id="btn-harvest" class="btn-main">Colher Lote de Grãos</button>
+            </section>
 
-        <div class="info">
-            <span>Pontos: <span id="score">0</span></span>
-            <span>Tempo: <span id="time">60</span>s</span>
-            <span>Saúde da Lavoura: <span id="health">100</span>%</span>
-        </div>
+            <section class="shop-area">
+                <h2>Tecnologias e Manejo (Loja)</h2>
+                <p>Use seus recursos para combater as ameaças à lavoura:</p>
+                
+                <div class="upgrades-grid">
+                    <div class="card" id="card-pest">
+                        <h3>Manejo de Pragas</h3>
+                        <p>Custo: 30 moedas</p>
+                        <button onclick="resolveProblem('pest', 30)" id="btn-pest" disabled>Inserir Controle Biológico</button>
+                    </div>
 
-        <div id="gameArea"></div>
+                    <div class="card" id="card-drought">
+                        <h3>Seca Extrema</h3>
+                        <p>Custo: 50 moedas</p>
+                        <button onclick="resolveProblem('drought', 50)" id="btn-drought" disabled>Ligar Irrigação Gotejamento</button>
+                    </div>
 
-        <button id="startBtn">Iniciar Jogo</button>
+                    <div class="card" id="card-erosion">
+                        <h3>Erosão do Solo</h3>
+                        <p>Custo: 40 moedas</p>
+                        <button onclick="resolveProblem('erosion', 40)" id="btn-erosion" disabled>Fazer Plantio Direto</button>
+                    </div>
 
-        <div id="message"></div>
+                    <div class="card" id="card-nutrients">
+                        <h3>Falta de Nutrientes</h3>
+                        <p>Custo: 25 moedas</p>
+                        <button onclick="resolveProblem('nutrients', 25)" id="btn-nutrients" disabled>Adubação Verde (Nitrogênio)</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Projeto Desenvolvido para o Programa Agrinho 2026 - Sustentabilidade e Tecnologia no Campo.</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>

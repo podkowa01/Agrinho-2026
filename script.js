@@ -1,59 +1,93 @@
-let money = 100;
-let food = 50;
-let nature = 100;
+const gameArea = document.getElementById("gameArea");
+const scoreText = document.getElementById("score");
+const timeText = document.getElementById("time");
+const startBtn = document.getElementById("startBtn");
+const message = document.getElementById("message");
 
-function updateScreen() {
-  document.getElementById("money").textContent = money;
-  document.getElementById("food").textContent = food;
-  document.getElementById("nature").textContent = nature;
+let score = 0;
+let time = 60;
+let gameRunning = false;
 
-  const message = document.getElementById("message");
+let spawnInterval;
+let timerInterval;
 
-  if(nature <= 0){
-    message.textContent = "❌ Sua fazenda destruiu o meio ambiente!";
-    disableButtons();
-  } else if(food >= 200){
-    message.textContent = "🏆 Parabéns! Você venceu com uma fazenda sustentável!";
-    disableButtons();
-  } else {
+startBtn.addEventListener("click", startGame);
+
+function startGame(){
+
+    if(gameRunning) return;
+
+    gameRunning = true;
+    score = 0;
+    time = 60;
+
+    scoreText.textContent = score;
+    timeText.textContent = time;
     message.textContent = "";
-  }
+
+    gameArea.innerHTML = "";
+
+    spawnInterval = setInterval(spawnItem, 800);
+
+    timerInterval = setInterval(() => {
+
+        time--;
+        timeText.textContent = time;
+
+        if(time <= 0){
+            endGame();
+        }
+
+    },1000);
 }
 
-function disableButtons(){
-  const buttons = document.querySelectorAll("button");
-  buttons.forEach(btn => {
-    btn.disabled = true;
-    btn.style.opacity = "0.5";
-  });
+function spawnItem(){
+
+    const item = document.createElement("div");
+    item.classList.add("item");
+
+    const isPest = Math.random() < 0.7;
+
+    item.textContent = isPest ? "🐛" : "💧";
+
+    const x = Math.random() * (gameArea.clientWidth - 60);
+    const y = Math.random() * (gameArea.clientHeight - 60);
+
+    item.style.left = x + "px";
+    item.style.top = y + "px";
+
+    item.addEventListener("click", () => {
+
+        if(!gameRunning) return;
+
+        if(isPest){
+            score += 10;
+        }else{
+            score += 5;
+        }
+
+        scoreText.textContent = score;
+        item.remove();
+    });
+
+    gameArea.appendChild(item);
+
+    setTimeout(() => {
+        if(item.parentNode){
+            item.remove();
+        }
+    }, 2000);
 }
 
-function organic(){
-  money += 10;
-  food += 20;
-  nature += 5;
-  updateScreen();
-}
+function endGame(){
 
-function fertilizer(){
-  money += 20;
-  food += 40;
-  nature -= 25;
-  updateScreen();
-}
+    gameRunning = false;
 
-function trees(){
-  money -= 10;
-  nature += 20;
-  updateScreen();
-}
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
 
-function harvest(){
-  money += 30;
-  food += 30;
-  nature -= 10;
-  updateScreen();
-}
+    message.innerHTML =
+        `🌾 Colheita concluída!<br>
+        Você fez ${score} pontos!`;
 
-// Atualiza a tela ao carregar
-updateScreen();
+}
